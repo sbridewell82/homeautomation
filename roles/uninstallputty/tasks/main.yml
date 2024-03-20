@@ -1,10 +1,10 @@
 ---
 - name: Check if PuTTY is installed
-  win_shell: Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*PuTTY*"}
+  win_shell: Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*PuTTY*"} | Select-Object -ExpandProperty IdentifyingNumber
   register: putty_installed
   ignore_errors: yes
 
 - name: Uninstall PuTTY if found
-  win_shell: msiexec /x {{ item.Id }} /qn
-  loop: "{{ putty_installed.stdout | from_json }}"
-  when: putty_installed.stdout != ""
+  win_shell: msiexec /x "{{ item }}" /qn
+  loop: "{{ putty_installed.stdout_lines }}"
+  when: putty_installed.stdout_lines | length > 0
