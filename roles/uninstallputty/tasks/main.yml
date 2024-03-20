@@ -6,5 +6,7 @@
   ignore_errors: yes
 
 - name: Uninstall PuTTY if installed
-  win_command: msiexec /x "{2417E5FE-8DB8-401D-BD4E-2842D15202F7}" /qn
+  win_package:
+    name: PuTTY release name or Product ID
+    state: absent
   when: putty_installed.exists == true  # Only run if PuTTY is installed
