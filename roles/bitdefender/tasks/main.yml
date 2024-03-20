@@ -1,0 +1,19 @@
+---
+- name: Create temporary folder for Bitdefender installer
+  win_file:
+    path: C:\Temp
+    state: directory
+
+- name: Download Bitdefender installer
+  win_get_url:
+    url: "https://download.bitdefender.com/windows/installer/en-us/avfree_experimental/bitdefender_avfree.exe?adobe_mc=MCMID%3D22925051275095938679173085086079367737%7CMCORGID%3D0E920C0F53DA9E9B0A490D45%2540AdobeOrg%7CTS%3D1710967086&_gl=1*63v8uu*_ga*MTY4MTYwOTYxMi4xNzEwOTY3MDkz*_ga_6M0GWNLLWF*MTcxMDk2NzA5My4xLjAuMTcxMDk2NzA5My42MC4wLjA."
+    dest: C:\Temp\Bitdefender_Installer.exe
+
+- name: Install Bitdefender
+  win_command: C:\Temp\Bitdefender_Installer.exe /silent /forcerestart
+  register: install_result
+  ignore_errors: yes
+
+- name: Check installation status
+  debug:
+    msg: "Bitdefender installation status: {{ install_result.rc }}"
