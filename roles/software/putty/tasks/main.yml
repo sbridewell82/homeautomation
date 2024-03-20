@@ -1,1 +1,17 @@
-
+---
+  - name: Create Destination Directory if not exists
+    win_file:
+      path: "{{ tempfolder }}"
+      state: directory
+    when: not (tempfolder is exists)
+  - name: Download Putty installer
+    win_get_url:
+      url: "{{ putty_download_url }}"
+      dest: "{{ putty_installer }}"
+  - name: Install Putty silently
+    win_shell: |
+      Start-Process -FilePath "{{ putty_installer }}" -ArgumentList "/quiet" -Wait
+  - name: Remove Putty installer
+    win_file:
+      path: "{{ putty_installer }}"
+      state: absent
