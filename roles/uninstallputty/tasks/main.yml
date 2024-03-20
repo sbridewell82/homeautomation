@@ -1,12 +1,10 @@
 ---
 - name: Check if PuTTY is installed
-  win_reg_stat:
-    path: HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Putty_is1
+  win_shell: Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "*PuTTY*"}
   register: putty_installed
   ignore_errors: yes
 
-- name: Uninstall PuTTY if installed
-  win_package:
-    name: PuTTY release name or Product ID
-    state: absent
-  when: putty_installed.exists == true  # Only run if PuTTY is installed
+- name: Uninstall PuTTY if found
+  win_shell: msiexec /x {{ item.Id }} /qn
+  loop: "{{ putty_installed.stdout | from_json }}"
+  when: putty_installed.stdout != ""
