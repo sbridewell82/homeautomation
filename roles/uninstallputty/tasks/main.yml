@@ -1,0 +1,9 @@
+---
+- name: Check if PuTTY is installed
+  win_command: Get-ChildItem "C:\Program Files\PuTTY" -ErrorAction SilentlyContinue
+  register: putty_installed
+  ignore_errors: yes
+
+- name: Uninstall PuTTY if installed
+  win_command: C:\Program Files\PuTTY\unins000.exe /SILENT
+  when: putty_installed.rc == 0  # Only run if PuTTY is installed
