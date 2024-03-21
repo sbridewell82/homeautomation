@@ -1,0 +1,4 @@
+- name: Disable user in Active Directory
+  win_command: |
+    dsquery user -samid "{{ username }}" | dsmod user -disabled yes
+      
